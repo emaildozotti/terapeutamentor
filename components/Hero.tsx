@@ -12,7 +12,18 @@ export const Hero: React.FC<HeroProps> = ({ onSchedule }) => {
 
   return (
     <section className="relative w-full min-h-[90vh] bg-cream-50 flex items-center overflow-hidden">
-      {/* Decorative Background Element */}
+      {/* Animated dot grid background */}
+      <div
+        className="absolute inset-0 opacity-[0.07]"
+        style={{
+          backgroundImage: 'radial-gradient(circle, #B45309 1px, transparent 1px)',
+          backgroundSize: '32px 32px',
+          animation: 'dotDrift 20s linear infinite',
+        }}
+      />
+      {/* Radial fade to keep center readable */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-cream-50/60 to-cream-50" />
+      {/* Warm glow accent */}
       <div className="absolute top-0 right-0 w-1/2 h-full bg-gold-700/5 -skew-x-12 hidden lg:block translate-x-1/4" />
 
       <div className="container mx-auto px-6 md:px-12 max-w-7xl relative z-10 py-8 lg:py-0">

@@ -52,6 +52,7 @@
           animation: {
             'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
             'marquee': 'marquee 40s linear infinite',
+            'dot-drift': 'dotDrift 20s linear infinite',
           },
           keyframes: {
             fadeInUp: {
@@ -61,6 +62,10 @@
             marquee: {
               '0%': { transform: 'translateX(0)' },
               '100%': { transform: 'translateX(-100%)' },
+            },
+            dotDrift: {
+              '0%': { backgroundPosition: '0 0' },
+              '100%': { backgroundPosition: '32px 32px' },
             }
           }
         }

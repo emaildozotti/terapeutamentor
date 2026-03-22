@@ -7,7 +7,7 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onSchedule }) => {
   return (
-    <footer className="bg-navy-900 text-white py-20">
+    <footer className="bg-cream-200 text-white py-20">
       <div className="container mx-auto px-6 text-center max-w-4xl" id="footer-cta">
         <h2 className="font-serif text-4xl md:text-5xl mb-6 leading-tight">
           Construa um consultório que te dê <span className="text-gold-500 italic">orgulho e lucro.</span>
