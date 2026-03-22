@@ -179,7 +179,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
 
       {/* CAL.COM BOOKING — monta embed fresco a cada abertura */}
       {step === 'booking' && (
-        <div className="relative w-full max-w-4xl max-h-[95vh] rounded-xl shadow-2xl overflow-auto animate-fade-in-up">
+        <div className="relative w-full max-w-4xl max-h-[95vh] overflow-auto animate-fade-in-up">
           <button
             onClick={onClose}
             className="fixed top-4 right-4 sm:top-6 sm:right-6 z-50 text-slate-400 hover:text-white transition-colors bg-slate-800/80 backdrop-blur-sm rounded-full p-2 shadow-lg"
