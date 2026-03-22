@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { X, CheckCircle2, Lock } from 'lucide-react';
 import { Button } from './ui/Button';
 import { trackPixelEvent, trackPixelCustomEvent } from '../lib/pixel';
@@ -10,9 +10,80 @@ interface BookingModalProps {
 
 type Step = 'qualification' | 'booking' | 'manual_review';
 
+// Separate component for Cal.com embed — mounts fresh each time
+const CalEmbed: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    // Ensure Cal.com script is loaded
+    (function (C: any, A: string, L: string) {
+      let p = function (a: any, ar: any) { a.q.push(ar); };
+      let d = C.document;
+      C.Cal = C.Cal || function () {
+        let cal = C.Cal;
+        let ar = arguments;
+        if (!cal.loaded) {
+          cal.ns = {};
+          cal.q = cal.q || [];
+          d.head.appendChild(d.createElement("script")).src = A;
+          cal.loaded = true;
+        }
+        if (ar[0] === L) {
+          const api = function () { p(api, arguments); };
+          const namespace = ar[1];
+          api.q = api.q || [];
+          if (typeof namespace === "string") {
+            cal.ns[namespace] = cal.ns[namespace] || api;
+            p(cal.ns[namespace], ar);
+            p(cal, ["initNamespace", namespace]);
+          } else p(cal, ar);
+          return;
+        }
+        p(cal, ar);
+      };
+    })(window, "https://app.cal.com/embed/embed.js", "init");
+
+    const Cal = (window as any).Cal;
+
+    // Use a unique namespace each mount to avoid stale references
+    const ns = "booking-" + Date.now();
+    Cal("init", ns, { origin: "https://app.cal.com" });
+
+    Cal.ns[ns]("inline", {
+      elementOrSelector: containerRef.current,
+      config: { layout: "month_view", useSlotsViewOnSmallScreen: "true" },
+      calLink: "matheus-zotti/50min",
+    });
+
+    Cal.ns[ns]("ui", { hideEventTypeDetails: true, layout: "month_view" });
+
+    Cal.ns[ns]("on", {
+      action: "bookingSuccessful",
+      callback: () => {
+        trackPixelEvent('Lead');
+      },
+    });
+
+    // Cleanup: remove injected iframe on unmount
+    return () => {
+      if (containerRef.current) {
+        containerRef.current.innerHTML = '';
+      }
+    };
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      style={{ width: '100%', height: '100%', overflow: 'scroll' }}
+    />
+  );
+};
+
 export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) => {
   const [step, setStep] = useState<Step>('qualification');
-  const calLoaded = useRef(false);
 
   // Reset modal state when opened
   useEffect(() => {
@@ -20,59 +91,6 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
       setStep('qualification');
     }
   }, [isOpen]);
-
-  // Load Cal.com embed script when step is 'booking'
-  useEffect(() => {
-    if (step === 'booking' && !calLoaded.current) {
-      calLoaded.current = true;
-
-      (function (C: any, A: string, L: string) {
-        let p = function (a: any, ar: any) { a.q.push(ar); };
-        let d = C.document;
-        C.Cal = C.Cal || function () {
-          let cal = C.Cal;
-          let ar = arguments;
-          if (!cal.loaded) {
-            cal.ns = {};
-            cal.q = cal.q || [];
-            d.head.appendChild(d.createElement("script")).src = A;
-            cal.loaded = true;
-          }
-          if (ar[0] === L) {
-            const api = function () { p(api, arguments); };
-            const namespace = ar[1];
-            api.q = api.q || [];
-            if (typeof namespace === "string") {
-              cal.ns[namespace] = cal.ns[namespace] || api;
-              p(cal.ns[namespace], ar);
-              p(cal, ["initNamespace", namespace]);
-            } else p(cal, ar);
-            return;
-          }
-          p(cal, ar);
-        };
-      })(window, "https://app.cal.com/embed/embed.js", "init");
-
-      const Cal = (window as any).Cal;
-      Cal("init", "50min", { origin: "https://app.cal.com" });
-
-      Cal.ns["50min"]("inline", {
-        elementOrSelector: "#my-cal-inline-50min",
-        config: { layout: "month_view", useSlotsViewOnSmallScreen: "true" },
-        calLink: "matheus-zotti/50min",
-      });
-
-      Cal.ns["50min"]("ui", { hideEventTypeDetails: true, layout: "month_view" });
-
-      // Pixel: Lead event on booking confirmed
-      Cal.ns["50min"]("on", {
-        action: "bookingSuccessful",
-        callback: () => {
-          trackPixelEvent('Lead');
-        },
-      });
-    }
-  }, [step]);
 
   if (!isOpen) return null;
 
@@ -97,7 +115,6 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
       {/* QUALIFICATION / DISQUALIFIED modal */}
       {step !== 'booking' && (
         <div className="relative bg-cream-50 rounded-lg shadow-2xl w-full max-w-md transition-all duration-500 overflow-hidden border border-gold-700/20">
-          {/* Close Button */}
           <div className="absolute top-2 right-2 z-20">
             <button
               onClick={onClose}
@@ -107,7 +124,6 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
             </button>
           </div>
 
-          {/* STEP 1: QUALIFICATION */}
           {step === 'qualification' && (
             <div className="p-8 animate-fade-in-up flex flex-col justify-center py-12 md:py-16">
               <div className="text-center mb-8">
@@ -140,7 +156,6 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
             </div>
           )}
 
-          {/* STEP 3: DISQUALIFIED */}
           {step === 'manual_review' && (
             <div className="p-8 animate-fade-in-up text-center py-12 md:py-16">
               <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-500">
@@ -162,10 +177,9 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
         </div>
       )}
 
-      {/* CAL.COM BOOKING modal — tamanho natural do embed */}
+      {/* CAL.COM BOOKING — monta embed fresco a cada abertura */}
       {step === 'booking' && (
         <div className="relative w-full max-w-4xl max-h-[95vh] rounded-xl shadow-2xl overflow-auto animate-fade-in-up">
-          {/* Close Button */}
           <button
             onClick={onClose}
             className="fixed top-4 right-4 sm:top-6 sm:right-6 z-50 text-slate-400 hover:text-white transition-colors bg-slate-800/80 backdrop-blur-sm rounded-full p-2 shadow-lg"
@@ -173,10 +187,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
             <X size={22} />
           </button>
 
-          <div
-            id="my-cal-inline-50min"
-            style={{ width: '100%', height: '100%', overflow: 'scroll' }}
-          ></div>
+          <CalEmbed />
         </div>
       )}
     </div>
