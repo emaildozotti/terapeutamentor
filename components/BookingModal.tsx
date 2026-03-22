@@ -108,17 +108,17 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-navy-900/60 backdrop-blur-sm transition-opacity"
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
       {/* QUALIFICATION / DISQUALIFIED modal */}
       {step !== 'booking' && (
-        <div className="relative bg-cream-50 rounded-lg shadow-2xl w-full max-w-md transition-all duration-500 overflow-hidden border border-gold-700/20">
+        <div className="relative bg-[#1a1a1a] rounded-lg shadow-2xl shadow-black/40 w-full max-w-md transition-all duration-500 overflow-hidden border border-slate-700/50">
           <div className="absolute top-2 right-2 z-20">
             <button
               onClick={onClose}
-              className="text-slate-400 hover:text-gold-700 transition-colors bg-white/90 backdrop-blur-sm rounded-full p-1.5 shadow-sm"
+              className="text-slate-400 hover:text-white transition-colors bg-slate-800/80 backdrop-blur-sm rounded-full p-1.5"
             >
               <X size={20} />
             </button>
@@ -127,28 +127,28 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
           {step === 'qualification' && (
             <div className="p-8 animate-fade-in-up flex flex-col justify-center py-12 md:py-16">
               <div className="text-center mb-8">
-                <div className="w-16 h-16 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-6 text-gold-700">
+                <div className="w-16 h-16 bg-gold-700/10 rounded-full flex items-center justify-center mx-auto mb-6 text-gold-700">
                   <span className="font-serif text-2xl font-bold">?</span>
                 </div>
-                <h3 className="font-serif text-2xl text-navy-900 mb-4 leading-tight">
+                <h3 className="font-serif text-2xl text-white mb-4 leading-tight">
                   Uma pergunta rápida para direcionar seu atendimento:
                 </h3>
-                <p className="text-lg text-slate-700 font-medium">
-                  Você tem de <span className="text-navy-900 font-bold">R$50 a R$100</span> para investir por dia no crescimento do seu negócio?
+                <p className="text-lg text-slate-300 font-medium">
+                  Você tem de <span className="text-white font-bold">R$50 a R$100</span> para investir por dia no crescimento do seu negócio?
                 </p>
               </div>
 
               <div className="flex flex-col gap-4">
                 <button
                   onClick={() => handleQualification(true)}
-                  className="w-full py-4 bg-green-600 hover:bg-green-700 text-white rounded-sm font-semibold tracking-wide uppercase transition-all transform hover:-translate-y-1 shadow-md flex items-center justify-center gap-2"
+                  className="w-full py-4 bg-green-600 hover:bg-green-500 text-white rounded-sm font-semibold tracking-wide uppercase transition-all transform hover:-translate-y-1 shadow-md flex items-center justify-center gap-2"
                 >
                   <CheckCircle2 size={20} /> Sim, eu tenho
                 </button>
 
                 <button
                   onClick={() => handleQualification(false)}
-                  className="w-full py-4 bg-white border-2 border-slate-200 text-slate-500 hover:border-slate-400 hover:text-slate-700 rounded-sm font-semibold tracking-wide uppercase transition-all"
+                  className="w-full py-4 bg-transparent border-2 border-slate-600 text-slate-400 hover:border-slate-400 hover:text-slate-200 rounded-sm font-semibold tracking-wide uppercase transition-all"
                 >
                   Não, ainda não tenho
                 </button>
@@ -158,14 +158,14 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
 
           {step === 'manual_review' && (
             <div className="p-8 animate-fade-in-up text-center py-12 md:py-16">
-              <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-500">
+              <div className="w-20 h-20 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-400">
                 <Lock size={32} strokeWidth={1.5} />
               </div>
-              <h3 className="font-serif text-2xl text-navy-900 mb-4">
+              <h3 className="font-serif text-2xl text-white mb-4">
                 Atenção: Vagas Restritas
               </h3>
-              <p className="text-slate-600 leading-relaxed mb-8">
-                No momento, estamos liberando a Sessão Estratégica Gratuita <strong>apenas para terapeutas que estão dispostas a investir</strong> no crescimento do próprio negócio.
+              <p className="text-slate-400 leading-relaxed mb-8">
+                No momento, estamos liberando a Sessão Estratégica Gratuita <strong className="text-slate-200">apenas para terapeutas que estão dispostas a investir</strong> no crescimento do próprio negócio.
                 <br /><br />
                 Como nosso método exige investimento em tráfego para gerar o faturamento de R$15k-30k, infelizmente não conseguiremos liberar um horário na agenda para você agora.
               </p>

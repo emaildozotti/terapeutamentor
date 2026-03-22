@@ -51,7 +51,7 @@ export const Benefits: React.FC = () => {
         />
         
         {/* Summary Card */}
-        <div className="bg-navy-900 p-8 rounded-sm shadow-2xl text-white flex flex-col justify-center items-center text-center border-t-2 border-gold-500 hover:-translate-y-1 transition-transform duration-300 h-full">
+        <div className="bg-gold-700/10 p-8 rounded-sm shadow-2xl shadow-black/20 text-white flex flex-col justify-center items-center text-center border-t-2 border-gold-500 hover:-translate-y-1 transition-transform duration-300 h-full border border-gold-700/20">
           <div className="bg-gold-700 px-4 py-2 mb-6 shadow-md">
             <p className="font-serif text-xl italic text-white">"O Método Validado"</p>
           </div>
