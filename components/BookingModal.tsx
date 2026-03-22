@@ -1,67 +1,77 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { X, CheckCircle2, Lock } from 'lucide-react';
 import { Button } from './ui/Button';
-import { trackPixelEvent, trackPixelCustomEvent, initPixel } from '../lib/pixel';
+import { trackPixelEvent, trackPixelCustomEvent } from '../lib/pixel';
 
 interface BookingModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-type Step = 'qualification' | 'calendly' | 'manual_review';
+type Step = 'qualification' | 'booking' | 'manual_review';
 
 export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) => {
   const [step, setStep] = useState<Step>('qualification');
+  const calLoaded = useRef(false);
 
-  // Listen for Calendly events
-  useEffect(() => {
-    const handleCalendlyEvent = (e: MessageEvent) => {
-      // Check if the message is from Calendly
-      const isCalendlyEvent = e.data.event && e.data.event.startsWith('calendly.');
-      const isCalendlyAction = e.data.action && e.data.action.startsWith('calendly.');
-
-      if (isCalendlyEvent || isCalendlyAction) {
-        const action = e.data.event || e.data.action;
-        console.log(`[Calendly] Event received: ${action}`, e.data);
-
-        if (action === 'calendly.event_scheduled') {
-          // Advanced Matching: If Calendly provides user data in the payload
-          const payload = e.data.payload || {};
-          const invitee = payload.invitee || {};
-
-          if (invitee.email) {
-            initPixel({
-              em: invitee.email.toLowerCase().trim()
-            });
-          }
-
-          trackPixelEvent('Lead');
-        }
-      }
-    };
-
-    window.addEventListener('message', handleCalendlyEvent);
-    return () => window.removeEventListener('message', handleCalendlyEvent);
-  }, []);
-
-  // Reset modal state when closed or opened
+  // Reset modal state when opened
   useEffect(() => {
     if (isOpen) {
       setStep('qualification');
     }
   }, [isOpen]);
 
-  // Load Calendly script when step is 'calendly'
+  // Load Cal.com embed script when step is 'booking'
   useEffect(() => {
-    if (step === 'calendly') {
-      const script = document.createElement('script');
-      script.src = "https://assets.calendly.com/assets/external/widget.js";
-      script.async = true;
-      document.body.appendChild(script);
+    if (step === 'booking' && !calLoaded.current) {
+      calLoaded.current = true;
 
-      return () => {
-        // Cleanup if needed
-      };
+      // Load Cal.com embed script
+      (function (C: any, A: string, L: string) {
+        let p = function (a: any, ar: any) { a.q.push(ar); };
+        let d = C.document;
+        C.Cal = C.Cal || function () {
+          let cal = C.Cal;
+          let ar = arguments;
+          if (!cal.loaded) {
+            cal.ns = {};
+            cal.q = cal.q || [];
+            d.head.appendChild(d.createElement("script")).src = A;
+            cal.loaded = true;
+          }
+          if (ar[0] === L) {
+            const api = function () { p(api, arguments); };
+            const namespace = ar[1];
+            api.q = api.q || [];
+            if (typeof namespace === "string") {
+              cal.ns[namespace] = cal.ns[namespace] || api;
+              p(cal.ns[namespace], ar);
+              p(cal, ["initNamespace", namespace]);
+            } else p(cal, ar);
+            return;
+          }
+          p(cal, ar);
+        };
+      })(window, "https://app.cal.com/embed/embed.js", "init");
+
+      const Cal = (window as any).Cal;
+      Cal("init", "50min", { origin: "https://app.cal.com" });
+
+      Cal.ns["50min"]("inline", {
+        elementOrSelector: "#my-cal-inline-50min",
+        config: { layout: "month_view", useSlotsViewOnSmallScreen: "true" },
+        calLink: "matheus-zotti/50min",
+      });
+
+      Cal.ns["50min"]("ui", { hideEventTypeDetails: false, layout: "month_view" });
+
+      // Listen for Cal.com booking confirmed event
+      Cal.ns["50min"]("on", {
+        action: "bookingSuccessful",
+        callback: () => {
+          trackPixelEvent('Lead');
+        },
+      });
     }
   }, [step]);
 
@@ -70,15 +80,15 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
   const handleQualification = (hasBudget: boolean) => {
     if (hasBudget) {
       trackPixelCustomEvent('Qualified_Sim');
-      setStep('calendly');
+      setStep('booking');
     } else {
       trackPixelCustomEvent('Qualified_Nao');
       setStep('manual_review');
     }
   };
 
-  // Dynamic max-width based on step (Calendly needs more space)
-  const maxWidthClass = step === 'calendly' ? 'max-w-5xl h-[90vh]' : 'max-w-md';
+  // Dynamic max-width based on step (Cal.com needs more space)
+  const maxWidthClass = step === 'booking' ? 'max-w-5xl h-[90vh]' : 'max-w-md';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -134,8 +144,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
           </div>
         )}
 
-        {/* STEP 2: CALENDLY (QUALIFIED) */}
-        {step === 'calendly' && (
+        {/* STEP 2: CAL.COM BOOKING (QUALIFIED) */}
+        {step === 'booking' && (
           <div className="w-full h-full bg-white flex flex-col animate-fade-in-up">
             <div className="p-4 bg-cream-100 border-b border-gold-700/10 text-center">
               <h3 className="font-serif text-xl text-navy-900">
@@ -145,9 +155,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
             </div>
             <div className="flex-1 w-full relative overflow-hidden">
               <div
-                className="calendly-inline-widget w-full h-full"
-                data-url="https://calendly.com/maathzotti/30-min?hide_event_type_details=1&hide_gdpr_banner=1"
-                style={{ minWidth: '320px', height: '100%' }}
+                id="my-cal-inline-50min"
+                style={{ width: '100%', height: '100%', overflow: 'scroll' }}
               ></div>
             </div>
           </div>
