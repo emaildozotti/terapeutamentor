@@ -21,6 +21,30 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
     }
   }, [isOpen]);
 
+  // Inject CSS to force Cal.com iframe to fill container
+  useEffect(() => {
+    if (step === 'booking') {
+      const styleId = 'cal-embed-fix';
+      if (!document.getElementById(styleId)) {
+        const style = document.createElement('style');
+        style.id = styleId;
+        style.textContent = `
+          #my-cal-inline-50min {
+            display: flex;
+            flex-direction: column;
+          }
+          #my-cal-inline-50min > div,
+          #my-cal-inline-50min iframe {
+            flex: 1 !important;
+            height: 100% !important;
+            min-height: 100% !important;
+          }
+        `;
+        document.head.appendChild(style);
+      }
+    }
+  }, [step]);
+
   // Load Cal.com embed script when step is 'booking'
   useEffect(() => {
     if (step === 'booking' && !calLoaded.current) {
@@ -104,17 +128,21 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
       />
 
       {/* Modal Content */}
-      <div className={`relative shadow-2xl w-full transition-all duration-500 overflow-hidden flex flex-col border border-gold-700/20 ${
+      <div className={`relative shadow-2xl w-full transition-all duration-500 overflow-hidden flex flex-col ${
         step === 'booking'
-          ? 'max-w-4xl h-[95vh] sm:h-[90vh] rounded-xl bg-white'
-          : 'max-w-md rounded-lg bg-cream-50'
+          ? 'max-w-4xl h-[95vh] sm:h-[90vh] rounded-xl bg-[#1a1a1a] border border-slate-700/50'
+          : 'max-w-md rounded-lg bg-cream-50 border border-gold-700/20'
       }`}>
 
         {/* Close Button */}
         <div className="absolute top-2 right-2 sm:top-3 sm:right-3 z-20">
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-gold-700 transition-colors bg-white/90 backdrop-blur-sm rounded-full p-1.5 shadow-sm"
+            className={`transition-colors rounded-full p-1.5 shadow-sm ${
+              step === 'booking'
+                ? 'text-slate-400 hover:text-white bg-slate-800/80 backdrop-blur-sm'
+                : 'text-slate-400 hover:text-gold-700 bg-white/90 backdrop-blur-sm'
+            }`}
           >
             <X size={20} />
           </button>
@@ -155,10 +183,10 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
 
         {/* STEP 2: CAL.COM BOOKING (QUALIFIED) */}
         {step === 'booking' && (
-          <div className="w-full h-full flex flex-col animate-fade-in-up">
+          <div className="w-full flex-1 flex flex-col animate-fade-in-up overflow-hidden">
             <div
               id="my-cal-inline-50min"
-              style={{ width: '100%', height: '100%', minHeight: '600px', overflow: 'auto' }}
+              style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column' }}
             ></div>
           </div>
         )}
