@@ -37,18 +37,18 @@ const CheckItem: React.FC<CheckItemProps> = ({ children, index, icon: Icon }) =>
       ref={ref}
       className={`
         flex flex-col items-center text-center gap-5 p-8 rounded-lg border transition-all duration-700 ease-out group
-        bg-white shadow-sm hover:shadow-xl hover:-translate-y-2 h-full justify-center
+        bg-cream-200 shadow-md shadow-black/10 hover:shadow-xl hover:shadow-black/20 hover:-translate-y-2 h-full justify-center
         ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}
       `}
       style={{ 
         transitionDelay: `${index * 150}ms`,
-        borderColor: 'rgba(180, 83, 9, 0.1)' // gold-700 with low opacity
+        borderColor: 'rgba(180, 83, 9, 0.2)' // gold-700 with low opacity
       }}
     >
-      <div className="w-14 h-14 rounded-full bg-cream-100 flex items-center justify-center flex-shrink-0 text-gold-700 group-hover:bg-gold-700 group-hover:text-white transition-colors duration-300 shadow-md mb-2">
+      <div className="w-14 h-14 rounded-full bg-white/5 flex items-center justify-center flex-shrink-0 text-gold-700 group-hover:bg-gold-700 group-hover:text-white transition-colors duration-300 shadow-md mb-2">
         <Icon size={24} strokeWidth={1.5} />
       </div>
-      <p className="text-slate-600 font-medium leading-relaxed group-hover:text-slate-800 transition-colors">
+      <p className="text-slate-400 font-medium leading-relaxed group-hover:text-slate-200 transition-colors">
         {children}
       </p>
     </div>
@@ -56,26 +56,26 @@ const CheckItem: React.FC<CheckItemProps> = ({ children, index, icon: Icon }) =>
 };
 
 const Highlight: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <strong className="font-bold text-navy-900">{children}</strong>
+  <strong className="font-bold text-white">{children}</strong>
 );
 
 export const Qualification: React.FC = () => {
   return (
-    <Section className="bg-white">
+    <Section className="bg-cream-100">
       {/* Container with a slightly distinct background for separation */}
-      <div className="bg-cream-50/50 rounded-3xl p-8 md:p-12 lg:p-16 relative overflow-hidden border border-gold-700/5">
+      <div className="bg-cream-50/50 rounded-3xl p-8 md:p-12 lg:p-16 relative overflow-hidden border border-gold-700/15">
          
          {/* Decorative Background Elements */}
-         <div className="absolute top-0 right-0 w-96 h-96 bg-gold-200/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-         <div className="absolute bottom-0 left-0 w-64 h-64 bg-navy-900/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
+         <div className="absolute top-0 right-0 w-96 h-96 bg-gold-700/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+         <div className="absolute bottom-0 left-0 w-64 h-64 bg-gold-700/3 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
          
          <div className="max-w-5xl mx-auto relative z-10">
           <div className="text-center mb-12 lg:mb-16">
-            <h2 className="font-serif text-3xl md:text-5xl text-navy-900 mb-6">
+            <h2 className="font-serif text-3xl md:text-5xl text-white mb-6">
               Para quem é esta sessão?
             </h2>
-            <p className="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed">
-              Essa reunião <strong className="text-navy-900">NÃO</strong> é uma sessão de terapia... é uma reunião de negócios para terapeutas que:
+            <p className="text-lg text-slate-400 max-w-3xl mx-auto leading-relaxed">
+              Essa reunião <strong className="text-white">NÃO</strong> é uma sessão de terapia... é uma reunião de negócios para terapeutas que:
             </p>
           </div>
 

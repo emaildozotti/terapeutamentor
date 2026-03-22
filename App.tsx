@@ -19,7 +19,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-cream-100">
       <main>
         <Hero onSchedule={openModal} />
         <Benefits />

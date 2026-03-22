@@ -3,24 +3,24 @@ import { Section } from './ui/Section';
 import { TrendingUp, Diamond, CalendarCheck, Award, Target } from 'lucide-react';
 
 const BenefitItem = ({ icon: Icon, title, description }: { icon: any, title: string, description: string }) => (
-  <div className="bg-white p-8 rounded-sm shadow-lg border-t-2 border-gold-700 hover:-translate-y-1 transition-transform duration-300 group h-full">
-    <div className="w-12 h-12 bg-cream-100 rounded-full flex items-center justify-center mb-6 text-gold-700 group-hover:bg-gold-700 group-hover:text-white transition-colors duration-300">
+  <div className="bg-cream-200 p-8 rounded-sm shadow-lg shadow-black/20 border-t-2 border-gold-700 hover:-translate-y-1 transition-transform duration-300 group h-full">
+    <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mb-6 text-gold-700 group-hover:bg-gold-700 group-hover:text-white transition-colors duration-300">
       <Icon size={24} strokeWidth={1.5} />
     </div>
-    <h3 className="font-serif text-xl text-navy-900 mb-3 font-semibold">{title}</h3>
-    <p className="text-slate-600 leading-relaxed text-sm">{description}</p>
+    <h3 className="font-serif text-xl text-white mb-3 font-semibold">{title}</h3>
+    <p className="text-slate-400 leading-relaxed text-sm">{description}</p>
   </div>
 );
 
 export const Benefits: React.FC = () => {
   return (
     // Override default py-16 with pt-6 on mobile to close the gap between Hero image and this text
-    <Section className="bg-white pt-6 pb-16 md:pt-24 md:pb-24">
+    <Section className="bg-cream-100 pt-6 pb-16 md:pt-24 md:pb-24">
       <div className="text-center max-w-3xl mx-auto mb-16">
-        <h2 className="font-serif text-3xl md:text-4xl text-navy-900 mb-6">
+        <h2 className="font-serif text-3xl md:text-4xl text-white mb-6">
           Você sairá desta reunião com um <span className="text-gold-700 italic">mapa claro</span> para:
         </h2>
-        <div className="w-24 h-1 bg-gold-700 mx-auto rounded-full opacity-30"></div>
+        <div className="w-24 h-1 bg-gold-700 mx-auto rounded-full opacity-50"></div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

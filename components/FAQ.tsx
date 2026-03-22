@@ -6,12 +6,12 @@ const FAQItem = ({ question, answer }: { question: string, answer: string }) => 
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="border-b border-slate-200">
+    <div className="border-b border-slate-700">
       <button 
         className="w-full py-6 flex justify-between items-center text-left focus:outline-none group"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span className={`font-serif text-lg ${isOpen ? 'text-gold-700' : 'text-navy-900'} font-medium transition-colors`}>
+        <span className={`font-serif text-lg ${isOpen ? 'text-gold-700' : 'text-white'} font-medium transition-colors`}>
           {question}
         </span>
         <span className="text-slate-400 group-hover:text-gold-700 transition-colors">
@@ -21,7 +21,7 @@ const FAQItem = ({ question, answer }: { question: string, answer: string }) => 
       <div 
         className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100 mb-6' : 'max-h-0 opacity-0'}`}
       >
-        <p className="text-slate-600 leading-relaxed">
+        <p className="text-slate-400 leading-relaxed">
           {answer}
         </p>
       </div>
@@ -33,7 +33,7 @@ export const FAQ: React.FC = () => {
   return (
     <Section className="bg-cream-50">
       <div className="max-w-3xl mx-auto">
-        <h2 className="font-serif text-3xl md:text-4xl text-center text-navy-900 mb-12">
+        <h2 className="font-serif text-3xl md:text-4xl text-center text-white mb-12">
           Perguntas Frequentes
         </h2>
         

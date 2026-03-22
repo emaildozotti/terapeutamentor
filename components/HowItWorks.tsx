@@ -64,7 +64,7 @@ const Step = ({ number, title, description, isLast }: { number: string, title: s
           style={{
              transform: isVisible ? 'scale(1)' : 'scale(0.5)',
              opacity: isVisible ? 1 : 0,
-             borderColor: isVisible ? '#B45309' : '#e2e8f0', // gold-700 : slate-200
+             borderColor: isVisible ? '#B45309' : '#334155', // gold-700 : slate-700
           }}
         >
           <span 
@@ -85,8 +85,8 @@ const Step = ({ number, title, description, isLast }: { number: string, title: s
           transitionDelay: '200ms' // Text appears slightly after the bubble
         }}
       >
-        <h3 className="font-serif text-xl text-navy-900 mb-2 font-semibold">{title}</h3>
-        <p className="text-slate-600 text-sm leading-relaxed">{description}</p>
+        <h3 className="font-serif text-xl text-white mb-2 font-semibold">{title}</h3>
+        <p className="text-slate-400 text-sm leading-relaxed">{description}</p>
       </div>
     </div>
   );
@@ -100,10 +100,10 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({ onSchedule }) => {
         {/* Left Header */}
         <div className="w-full md:w-1/3">
           <div className="sticky top-24">
-            <h2 className="font-serif text-3xl md:text-4xl text-navy-900 mb-6">
+            <h2 className="font-serif text-3xl md:text-4xl text-white mb-6">
               Como funciona esta <span className="block text-gold-700 italic">Sessão Estratégica?</span>
             </h2>
-            <p className="text-slate-600 mb-8">
+            <p className="text-slate-400 mb-8">
               Um processo estruturado para diagnosticar e resolver os gargalos do seu consultório.
             </p>
             <Button className="hidden md:inline-flex" onClick={onSchedule}>
@@ -138,7 +138,7 @@ export const HowItWorks: React.FC<HowItWorksProps> = ({ onSchedule }) => {
               description={
                 <span className="block space-y-2">
                   <span>Montaremos juntas um plano personalizado para os próximos 90 dias, focado em:</span>
-                  <ul className="list-disc pl-4 space-y-1 text-slate-700">
+                  <ul className="list-disc pl-4 space-y-1 text-slate-300">
                     <li>Como se posicionar para cobrar 2x ou 3x mais.</li>
                     <li>Criar pacotes que geram previsibilidade.</li>
                     <li>Atrair pacientes particulares semanalmente.</li>

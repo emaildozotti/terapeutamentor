@@ -28,7 +28,7 @@ export const Footer: React.FC<FooterProps> = ({ onSchedule }) => {
           </p>
         </div>
 
-        <div className="mt-20 pt-8 border-t border-navy-800 text-slate-500 text-sm">
+        <div className="mt-20 pt-8 border-t border-slate-800 text-slate-500 text-sm">
           <p>&copy; {new Date().getFullYear()} Mentoria Terapeuta Premium. Todos os direitos reservados.</p>
         </div>
       </div>
