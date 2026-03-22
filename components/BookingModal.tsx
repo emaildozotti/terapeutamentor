@@ -63,7 +63,15 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
         calLink: "matheus-zotti/50min",
       });
 
-      Cal.ns["50min"]("ui", { hideEventTypeDetails: false, layout: "month_view" });
+      Cal.ns["50min"]("ui", {
+        hideEventTypeDetails: false,
+        layout: "month_view",
+        cssVarsPerTheme: {
+          light: {
+            "cal-brand-color": "#0f172a",
+          },
+        },
+      });
 
       // Listen for Cal.com booking confirmed event
       Cal.ns["50min"]("on", {
@@ -87,11 +95,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
     }
   };
 
-  // Dynamic max-width based on step (Cal.com needs more space)
-  const maxWidthClass = step === 'booking' ? 'max-w-5xl h-[90vh]' : 'max-w-md';
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-navy-900/60 backdrop-blur-sm transition-opacity"
@@ -99,15 +104,19 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
       />
 
       {/* Modal Content */}
-      <div className={`relative bg-cream-50 rounded-lg shadow-2xl w-full ${maxWidthClass} transition-all duration-500 overflow-hidden flex flex-col border border-gold-700/20`}>
+      <div className={`relative shadow-2xl w-full transition-all duration-500 overflow-hidden flex flex-col border border-gold-700/20 ${
+        step === 'booking'
+          ? 'max-w-4xl h-[95vh] sm:h-[90vh] rounded-xl bg-white'
+          : 'max-w-md rounded-lg bg-cream-50'
+      }`}>
 
-        {/* Header / Close Button */}
-        <div className="flex justify-end p-4 absolute top-0 right-0 z-20">
+        {/* Close Button */}
+        <div className="absolute top-2 right-2 sm:top-3 sm:right-3 z-20">
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-gold-700 transition-colors bg-white/80 rounded-full p-1"
+            className="text-slate-400 hover:text-gold-700 transition-colors bg-white/90 backdrop-blur-sm rounded-full p-1.5 shadow-sm"
           >
-            <X size={24} />
+            <X size={20} />
           </button>
         </div>
 
@@ -146,19 +155,11 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose }) =
 
         {/* STEP 2: CAL.COM BOOKING (QUALIFIED) */}
         {step === 'booking' && (
-          <div className="w-full h-full bg-white flex flex-col animate-fade-in-up">
-            <div className="p-4 bg-cream-100 border-b border-gold-700/10 text-center">
-              <h3 className="font-serif text-xl text-navy-900">
-                Parabéns! Selecione seu horário abaixo:
-              </h3>
-              <p className="text-xs text-slate-500">Agendamento oficial com Matheus Zotti</p>
-            </div>
-            <div className="flex-1 w-full relative overflow-hidden">
-              <div
-                id="my-cal-inline-50min"
-                style={{ width: '100%', height: '100%', overflow: 'scroll' }}
-              ></div>
-            </div>
+          <div className="w-full h-full flex flex-col animate-fade-in-up">
+            <div
+              id="my-cal-inline-50min"
+              style={{ width: '100%', height: '100%', minHeight: '600px', overflow: 'auto' }}
+            ></div>
           </div>
         )}
 
