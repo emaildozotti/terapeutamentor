@@ -54,7 +54,7 @@ const CalEmbed: React.FC = () => {
     Cal.ns[ns]("inline", {
       elementOrSelector: containerRef.current,
       config: { layout: "month_view", useSlotsViewOnSmallScreen: "true" },
-      calLink: "matheus-zotti/50min",
+      calLink: "matheus-zotti/t10x",
     });
 
     Cal.ns[ns]("ui", { hideEventTypeDetails: true, layout: "month_view" });
